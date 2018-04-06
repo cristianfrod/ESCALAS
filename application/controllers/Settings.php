@@ -29,9 +29,9 @@ class settings extends CI_Controller {
 
 	function user_create(){
 
-		if(!$this->login_database->isLogged()){
-			redirect('signin');
-		}
+		// if(!$this->login_database->isLogged()){
+		// 	redirect('signin');
+		// }
 
 		$this->form_validation->set_rules('fullname', 'fullname', 'trim');
   	$this->form_validation->set_rules("email", "email", "valid_email");
