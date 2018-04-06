@@ -321,12 +321,145 @@ class Schedule extends CI_Controller {
       redirect('signin');
     }
 
-    $data['title'] = 'SIMO - Visualizar Escala';
-    $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
-    $data['menu'] = '4';
-    $data['body'] = 'schedule/schedule_viewByMembers';
-    $this->load->view('inside', $data);
+    $this->form_validation->set_rules('year', 'ANO', 'required', array('required' => 'Preencha o %s'));
+    $this->form_validation->set_rules('month', 'MÊS', 'required', array('required' => 'Preencha o %s'));
+
+
+
+if ($this->form_validation->run() === FALSE) {
+  $data['title'] = 'SIMO - Visualizar Escala';
+  $data['sessionfullname'] = $this->session->userdata['sessionfullname'];
+  $data['menu'] = '4';
+  $data['body'] = 'schedule/schedule_viewByMembers';
+  $this->load->view('inside', $data);
+}else {
+  $year = $this->input->post('year');
+  $month = $this->input->post('month');
+if ($month > 0) {
+  //generates first table for manager original entries
+  $result = $this->Schedule_database->getMembersEntries($year,$month);//orderby date, idschedule
+
+  $monthdays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+  $line =1;
+  while ($line != 5) {
+    for ($i=1; $i <= $monthdays; $i++) {
+      $internalMatriz[$i][$line] = '';
+    }
+  $line++;
   }
+
+  $line =1;
+  while ($line != 5) {
+    for ($i=1; $i <= $monthdays; $i++) {
+      $hint[$i][$line] = '';
+    }
+  $line++;
+  }
+
+  if ($result->num_rows() > 0) {
+    //fill matriz[31x7] with records -> month and year
+    foreach ($result->result() as $row){
+      // get day into date from table
+      $day = date_format(date_create($row->scheduleDate), 'd');
+
+      $nickname = substr($row->nickname, 0, 2);
+      if ($row->idSchedule < 5) {
+        if ($internalMatriz[intval($day)][$row->idSchedule] != "") {
+          // echo intval($day); echo $row->idSchedule; die();
+
+          $internalMatriz[intval($day)][$row->idSchedule] = $internalMatriz[intval($day)][$row->idSchedule].'<br>'.$nickname;
+          $hint[intval($day)][$row->idSchedule] = $hint[intval($day)][$row->idSchedule].';'.$row->nickname;
+        }else{
+          $internalMatriz[intval($day)][$row->idSchedule] = $nickname;
+          $hint[intval($day)][$row->idSchedule] = $row->nickname;
+        }
+      }
+    }
+    //write table header
+    $table ='<table  class="table-bordered" width="100%"><tr width="30" >';
+    $table .= '<th class="bg-info" style="text-align:center; font-size:12px" width="30">ESCALA</th>';
+    for ($i=1; $i <= $monthdays; $i++) {
+    $table .= '<th  class="bg-info" style="text-align:center; " width="30" >'.$i.'</th>';
+    }
+    //starts body
+    $table .= '<tbody>';
+    //set first line and starts it
+    $line = 1;
+    $table .= '<tr  weight="10">';
+
+    //first collumn
+    while ( $line != 5) {
+      switch ($line) {
+        case 1:
+        $table .= '<td class="bg-info" style="text-align:center;font-weight:bold; font-size:12px">'."07:00<br>13:00".'</td>';
+        break;
+        case 2:
+        $table .= '<td class="bg-info" style="text-align:center;font-weight:bold; font-size:12px">'."13:00<br>18:00".'</td>';
+        break;
+        case 3:
+        $table .= '<td class="bg-info" style="text-align:center;font-weight:bold; font-size:12px">'."18:00<br>23:00".'</td>';
+        break;
+        case 4:
+        $table .= '<td class="bg-info" style="text-align:center;font-weight:bold; font-size:12px">'."23:00<br>07:00".'</td>';
+        break;
+      }
+
+      //using internal matriz, fill all days and schedules
+      for ($i=1; $i <= $monthdays; $i++) {
+
+        $table .= '<td style="text-align:center; padding-bottom:3px; font-size:12px;" title="'.$hint[$i][$line].'" >'
+        . $internalMatriz[$i][$line] .'</td>';
+      }
+      $line++;
+      $table .='<tr height="40">';
+    }
+    //closing table
+    $table .= '</tbody></table>';
+    $table .= '<br>';
+
+    $this->load->library('mpdf/mpdf.php');
+    $data = $this->input->post();
+    $months = ["","Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    $reportData['month'] = $months[intval($data['month'])];
+    $reportData['year'] = $data['year'];
+    $reportData['tabela'] = $table;
+
+
+    $mpdf = new mPDF();
+
+    $html = $this->load->view('reports/reportTemplate',$reportData,TRUE);
+
+    setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+    date_default_timezone_set('America/Sao_Paulo');
+
+    $headerdate =  utf8_encode(strftime('%d de %B de %Y , %H:%M:%S '));
+
+    $mpdf->SetHeader('CICCR - Curitiba, ' . $headerdate);
+    //
+    $mpdf->SetFooter('<div align="left">CICCR - CENTRO INTEGRADO DE COMANDO E CONTROLE REGIONAL
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>');
+    // {PAGENO}</div>');
+    // Insere o conteúdo da variável $html no arquivo PDF
+    // $stylesheet = file_get_contents("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css");
+      // $mpdf->WriteHTML($stylesheet,1);
+    $mpdf->AddPage('L');
+    $mpdf->writeHTML($html);
+    // Cria uma nova página no arquivo
+    // $mpdf->AddPage();
+    // Insere o conteúdo na nova página do arquivo PDF
+    // $mpdf->WriteHTML('<p><b>Minha nova página no arquivo PDF</b></p>');
+    // Gera o arquivo PDF
+    echo $mpdf->Output();
+  }else{
+    echo '<label style="text-align:center; "> NENHUMA EQUIPE CADASTRADA PARA ESTA DATA!</lable>';
+  }
+ }
+}
+}
 
   function newGroup(){
     if(!$this->login_database->isLogged()){
@@ -805,8 +938,8 @@ class Schedule extends CI_Controller {
   //section for exchange page
   function generateViewByMembersTable(){
 
-    $year = $this->input->post('year');
-    $month = $this->input->post('month');
+      $year = $this->input->post('year');
+      $month = $this->input->post('month');
     if ($month > 0) {
       //generates first table for manager original entries
       $result = $this->Schedule_database->getMembersEntries($year,$month);//orderby date, idschedule

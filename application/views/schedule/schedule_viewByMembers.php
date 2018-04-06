@@ -8,6 +8,8 @@
             <h3 class="panel-title">Selecione a data da escala</h3>
           </div>
           <div class="panel-body">
+            <form method="post">
+
             <div class="row">
               <div class="form-group col-md-4">
                 <label for="year">Ano</label>
@@ -38,9 +40,11 @@
               </div>
               <div class="col-md-4">
                 <label for="">&nbsp;</label>
-                <button class="btn btn-sm btn-primary btn-block" id="btn"><i class="fa fa-print fa-1x" aria-hidden="true"></i> IMPRIMIR ESCALAS</button>
+                <button class="btn btn-sm btn-primary btn-block" type="submit"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;GERAR PDF</button>
               </div>
             </div>
+          </form>
+
           </div>
         </div>
       </div>
@@ -51,7 +55,7 @@
 <div class="table-responsive" name="schedule2" id="schedule2"></div>
 
 
-<script>
+<!-- <script>
     document.getElementById('btn').onclick = function() {
     var conteudo = document.getElementById('schedule').innerHTML,
     tela_impressao = window.open('CICCR:ESCALA DE SERVIÇO');
@@ -59,4 +63,4 @@
     tela_impressao.window.print();
     tela_impressao.window.close();
 };
-</script>
+</script> -->
