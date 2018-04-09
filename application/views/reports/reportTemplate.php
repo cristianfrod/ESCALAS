@@ -55,8 +55,12 @@
 								</tr>
 							</table>
 							<br>
+							<br>
+							<br>
 							<div style="text-align: center;">
 								<div style="font-size:13px;"><strong>ESCALA DO MÊS DE <?= strtoupper($month).' DE '.$year ?></strong></div>
+								<br>
+								<br>
 								<br>
 							</div>
 						</div>
@@ -68,13 +72,78 @@
 							</div>
 						</div>
 					</div>
-				<br>
-				<br>
-				<br>
-				<br>
-				<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
 					<div class="row">
-						<div class="col-md-2">
+						<div class="col-md-6">
+							<div class="table-responsive">
+								<br>
+								<br>
+								<br>
+								<?= $tabela2 ?>
+								<?= $tabela3 ?>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+								<br>
+							<!-- </div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-2"> -->
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -102,5 +171,5 @@
 						</div>
 					</div>
 					</div>
-				</div>
+				<!-- </div> -->
 			</body>

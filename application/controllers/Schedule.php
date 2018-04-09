@@ -337,7 +337,7 @@ if ($this->form_validation->run() === FALSE) {
   $month = $this->input->post('month');
 if ($month > 0) {
   //generates first table for manager original entries
-  $result = $this->Schedule_database->getMembersEntries($year,$month);//orderby date, idschedule
+  $result = $this->Schedule_database->getExchangeEntries($year,$month);//orderby date, idschedule
 
   $monthdays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
   $line =1;
@@ -417,12 +417,56 @@ if ($month > 0) {
     $table .= '</tbody></table>';
     $table .= '<br>';
 
+
+    //legenda
+    //write table header
+    $table2 ='<table  class="table-bordered" width="40%"><tr width="10%" >';
+    $table2 .= '<th class="bg-info" style="text-align:center; font-size:12px" width="30">ABREVIAÇÃO</th>';
+    $table2 .= '<th  class="bg-info" style="text-align:center; " width="30" >NOME COMPLETO</th>';
+    //starts body
+    $table2 .= '<tbody>';
+
+
+    // $table3 ='<table  class="table-bordered" width="40%"><tr width="10%" >';
+    // $table3 .= '<th class="bg-info" style="text-align:center; font-size:12px" width="30">ABREVIAÇÃO</th>';
+    // $table3 .= '<th  class="bg-info" style="text-align:center; " width="30" >NOME COMPLETO</th>';
+    //starts body
+    // $table3 .= '<tbody>';
+    $counter = 0;
+    $users = $this->Schedule_database->getReportUsers();
+    $rows = $users->num_rows()/2;
+    foreach ($users->result() as $user){
+      // if ($counter < $rows) {
+        $nickname = substr($user->nickname, 0, 2);
+        $table2 .='<tr width="20">';
+        $table2 .= '<td style="text-align:center;font-weight:bold; font-size:12px">'.$nickname.'</td>';
+        $table2 .= '<td style="text-align:left;font-weight:bold; font-size:12px">  '.$user->fullname.'</td>';
+        $counter++;
+      // }else{
+      $nickname = substr($user->nickname, 0, 2);
+      // $table3 .='<tr width="20">';
+      // $table3 .= '<td style="text-align:center;font-weight:bold; font-size:12px">'.$nickname.'</td>';
+      // $table3 .= '<td style="text-align:left;font-weight:bold; font-size:12px">  '.$user->fullname.'</td>';
+    // }
+    }
+
+    $table2 .= '</tbody></table>';
+    // $table3 .= '</tbody></table>';
+
+
+
+
+
+
     $this->load->library('mpdf/mpdf.php');
     $data = $this->input->post();
     $months = ["","Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
     $reportData['month'] = $months[intval($data['month'])];
     $reportData['year'] = $data['year'];
     $reportData['tabela'] = $table;
+    $reportData['tabela2'] = $table2;
+    // $reportData['tabela3'] = $table3;
+    // $reportData['tabela'] = $this->generateViewByMembersTable($reportData['year'],$reportData['month']);
 
 
     $mpdf = new mPDF();
@@ -436,12 +480,7 @@ if ($month > 0) {
 
     $mpdf->SetHeader('CICCR - Curitiba, ' . $headerdate);
     //
-    $mpdf->SetFooter('<div align="left">CICCR - CENTRO INTEGRADO DE COMANDO E CONTROLE REGIONAL
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </div>');
+    $mpdf->SetFooter('CICCR - CENTRO INTEGRADO DE COMANDO E CONTROLE REGIONAL                                                                                                                                                                                                ');
     // {PAGENO}</div>');
     // Insere o conteúdo da variável $html no arquivo PDF
     // $stylesheet = file_get_contents("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css");

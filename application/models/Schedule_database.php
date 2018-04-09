@@ -189,6 +189,7 @@ class Schedule_database extends CI_Model {
   }
 
   function getScheduleMembers(){
+
     $date = $this->input->post("date");
     $schedule = $this->input->post("schedule");
 
@@ -223,6 +224,15 @@ class Schedule_database extends CI_Model {
     $result = $this->db
       ->select('idUser,nickname')
       ->where('idPermission', 1)
+      ->order_by("nickname", "asc")
+      ->get("users");
+      return $result;
+  }
+
+  function getReportUsers() {
+
+    $result = $this->db
+      ->where('idGroup<>', null)
       ->order_by("nickname", "asc")
       ->get("users");
       return $result;
