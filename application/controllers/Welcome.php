@@ -27,10 +27,8 @@ class Welcome extends CI_Controller{
     $this->form_validation->set_rules('password', 'Password', 'trim');
 
     $this->load->model('login_database');
-    $data = array(
-      'username' => $this->input->post('username'),
-      'password' => $this->input->post('password')
-      );
+    $login['username'] = $this->input->post('username');
+    $login['password'] = $this->input->post('password');
 
     if ($this->form_validation->run() == FALSE) {
       if(isset($this->session->userdata['logged'])){
@@ -43,11 +41,11 @@ class Welcome extends CI_Controller{
         $this->load->view('outside',$data);
       }
     }else{
-      $result = $this->login_database->authenticate($data);
+      $result = $this->login_database->authenticate($login);
       if ($result){
-        $first_time_check = $this->login_database->first_time_check($data);
+        $first_time_check = $this->login_database->first_time_check($login);
         if($first_time_check) {
-          $last_login_update = $this->login_database->last_login_update($data);
+          $last_login_update = $this->login_database->last_login_update($login);
           redirect('schedule?x=y');
         }else{
           redirect('schedule');

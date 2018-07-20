@@ -246,13 +246,8 @@ class Schedule extends CI_Controller {
             $entry['idSchedule'] = $idSchedule;
             $entry['scheduleDate'] = $scheduleDate;
             $newEntry = $this->Schedule_database->newEntry($entry);
-            //new entry for second idchedule, same day
-            $idSchedule = 4;
-            $entry['idSchedule'] = $idSchedule;
-            $entry['scheduleDate'] = $scheduleDate;
-            $newEntry = $this->Schedule_database->newEntry($entry);
             //set next idSchedule
-            $idSchedule = 5;
+            $idSchedule = 4;
             $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
             break;
           case 2:
@@ -269,6 +264,14 @@ class Schedule extends CI_Controller {
             $newEntry = $this->Schedule_database->newEntry($entry);
             //set next idSchedule
             $idSchedule = 2;
+            $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
+            break;
+          case 4:
+            $entry['idSchedule'] = $idSchedule;
+            $entry['scheduleDate'] = $scheduleDate;
+            $newEntry = $this->Schedule_database->newEntry($entry);
+            //set next idSchedule
+            $idSchedule = 5;
             $scheduleDate = date('Y-m-d', strtotime($scheduleDate . " + 1 day"));
             break;
           case 5:
