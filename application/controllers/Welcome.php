@@ -13,11 +13,12 @@ class Welcome extends CI_Controller{
 
   function index(){
 
-        $data['title'] = 'SIMO - Entrar';
-        $data['activemenu'] = '2';
-        $data['error'] = '0';
-        $data['body'] = 'signin';
-        $this->load->view('outside',$data);
+    $this->signin();
+        // $data['title'] = 'SIMO - Entrar';
+        // $data['activemenu'] = '2';
+        // $data['error'] = '0';
+        // $data['body'] = 'signin';
+        // $this->load->view('outside',$data);
 
   }
 

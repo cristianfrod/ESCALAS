@@ -51,7 +51,7 @@ header('Access-Control-Allow-Origin: *');
 		$this->form_validation->set_rules('password', 'Password', 'trim');
 
 		$this->load->model('login_database');
-		$data = array(
+		$auth = array(
 			'username' => $this->input->post('username'),
 			'password' => $this->input->post('password')
 			);
@@ -67,11 +67,11 @@ header('Access-Control-Allow-Origin: *');
 				$this->load->view('outside',$data);
 			}
 		}else{
-			$result = $this->login_database->authenticate($data);
+			$result = $this->login_database->authenticate($auth);
 			if ($result){
-				$first_time_check = $this->login_database->first_time_check($data);
+				$first_time_check = $this->login_database->first_time_check($auth);
 				if($first_time_check) {
-					$last_login_update = $this->login_database->last_login_update($data);
+					$last_login_update = $this->login_database->last_login_update($auth);
 					redirect('home?x=y');
 				}else{
 					redirect('home');
